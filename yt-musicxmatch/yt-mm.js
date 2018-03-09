@@ -9,7 +9,6 @@ $(document).ready(function () {
 
     // call MusicXMatch API using track.search method to retrieve song titles to use as YouTube search queries
     function fetchTracks() {
-        // console.log("hi")
         $.ajax({
             type: "GET",
             url: "http://api.musixmatch.com/ws/1.1/track.search",
@@ -48,34 +47,35 @@ $(document).ready(function () {
             dataType: 'json',
             type: 'GET',
             timeout: 5000,
-            url: 'https://www.googleapis.com/youtube/v3/search'
-        })
-            .done(function (data) {
-                console.log(data)
+            url: 'https://www.googleapis.com/youtube/v3/search',
+            success: function (response) {
+                // pull video data and construct iframe player (EDIT THIS SECTION TO INTEGRATE)
+
                 // create new div to act as video container
                 var vidContainer = $("<div>")
                 vidContainer.addClass("vid-container col-lg-4")
                 vidContainer.attr("id", "vid-" + index)
-
+                
                 // create iframe for video search result, append to video container
                 var newVid = $("<iframe>")
                 newVid.attr("frameborder", "0")
-                var vidID = data.items[0].id.videoId
+                var vidID = response.items[0].id.videoId
                 newVid.attr("src", "http://www.youtube.com/embed/" + vidID)
                 vidContainer.append(newVid)
-
+                
                 // add title to video container, append to video container
-                var vidTitle = data.items[0].snippet.title
+                var vidTitle = response.items[0].snippet.title
                 var newTitle = $("<p>")
                 newTitle.text(vidTitle)
                 vidContainer.append(newTitle)
-
+                
                 // append container to results div
                 $(".results").append(vidContainer)
-
+                
                 // pass song id and position into fetchLyrics function
                 fetchLyrics(songID, index)
-            })
+            }
+        })
     }
 
 
