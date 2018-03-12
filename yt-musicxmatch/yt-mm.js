@@ -23,10 +23,11 @@ $(document).ready(function () {
                 // pull first 4 track names, artist name, and song ID (to search for lyrics using fetchLyrics)
                 console.log(response)
                 $('.results').empty()
-                for (index in response.message.body.track_list) {
-                    var artist = response.message.body.track_list[index].track.artist_name
-                    var song = response.message.body.track_list[index].track.track_name
-                    var songID = response.message.body.track_list[index].track.track_id
+                var trackList = response.message.body.track_list
+                for (index in trackList) {
+                    var artist = trackList[index].track.artist_name
+                    var song = trackList[index].track.track_name
+                    var songID = trackList[index].track.track_id
                     console.log("artist: " + artist, "song: " + song)
                     youtubeApiCall(artist, song, songID, index)
                 }
@@ -92,11 +93,12 @@ $(document).ready(function () {
             dataType: "jsonp",
             success: function (response) {
                 // pull lyrics, copyright, and link data (EDIT THIS SECTION TO INTEGRATE)
-                var copyright = $("<p>").text(response.message.body.lyrics.lyrics_copyright)
+                var lyricsData = response.message.body.lyrics
+                var copyright = $("<p>").text(lyricsData.lyrics_copyright)
                 copyright.addClass("copyright")
-                var lyricsURL = $("<a>").attr("href", response.message.body.lyrics.backlink_url)
+                var lyricsURL = $("<a>").attr("href", lyricsData.backlink_url)
                 lyricsURL.text("full lyrics")
-                var lyrics = response.message.body.lyrics.lyrics_body
+                var lyrics = lyricsData.lyrics_body
                 var lyricsSnippet = $("<p>").text(lyrics.slice(0, 200) + "...")
 
                 $("#vid-" + index).append($("<h5>").text("Lyrics Sample"))
